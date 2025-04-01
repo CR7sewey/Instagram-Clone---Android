@@ -21,6 +21,9 @@ import com.mike.instagramclone.databinding.ActivitySignUpBinding
 import com.mike.instagramclone.utils.USER
 import com.mike.instagramclone.utils.USER_PROFILE_FOLDER
 import com.mike.instagramclone.utils.Utils
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class SignUpActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignUpBinding
@@ -147,13 +150,52 @@ class SignUpActivity : AppCompatActivity() {
 
     private fun saveUser() {
         db = FirebaseFirestore.getInstance()
-        db.collection(USER).document(Firebase.auth.currentUser!!.uid).set(user).addOnSuccessListener { documentReference ->
-            Toast.makeText(this@SignUpActivity, "User saved: ${user.email.toString()}", Toast.LENGTH_SHORT).show()
-        }
+        db.collection(USER).document(Firebase.auth.currentUser!!.uid).set(user)
+            .addOnSuccessListener { documentReference ->
+                Toast.makeText(
+                    this@SignUpActivity,
+                    "User saved: ${user.email.toString()}",
+                    Toast.LENGTH_SHORT
+                ).show()
+                startActivity(Intent(this, HomeActivity::class.java))
+            }
             .addOnFailureListener { e ->
-                Toast.makeText(this@SignUpActivity, "Register failed: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@SignUpActivity,
+                    "Register failed: ${e.localizedMessage}",
+                    Toast.LENGTH_SHORT
+                ).show()
+
             }
     }
+
+    private fun updateUI() {
+        val intent = Intent(this, HomeActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    /*private fun signIn() {
+        // [START sign_in_with_email]
+        auth.signInWithEmailAndPassword(user.email.toString(), user.password.toString())
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d("Success", "signInWithEmail:success")
+                    val user = auth.currentUser
+                    updateUI()
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Log.w("Failure", "signInWithEmail:failure", task.exception)
+                    Toast.makeText(
+                        baseContext,
+                        "Authentication failed.",
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                }
+            }
+        // [END sign_in_with_email]
+    }*/
 
 
 }

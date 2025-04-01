@@ -49,7 +49,7 @@
         android:layout_marginBottom = "36dp"
         app:layout_constraintRight_toLeftOf="@id/textView"
         android:src="@drawable/meta"
-        android:tint="@color/pink"
+        app:tint="@color/pink"
         />
 
     <TextView
