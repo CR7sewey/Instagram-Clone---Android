@@ -8,6 +8,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,9 +23,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         Handler(Looper.getMainLooper()).postDelayed({
-            val intent = Intent(this, SignUpActivity::class.java)
-            startActivity(intent)
-            finish()
+            if (FirebaseAuth.getInstance().currentUser != null) {
+                startActivity(Intent(this,HomeActivity::class.java))
+            }
+            else {
+                val intent = Intent(this, SignUpActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
         }, 5000)
 
 

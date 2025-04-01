@@ -110,15 +110,15 @@ class SignUpActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         // Check if user is signed in (non-null) and update UI accordingly.
-        /*val currentUser = auth.currentUser
+        val currentUser = auth.currentUser
         if (currentUser != null) {
             reload()
-        }*/
+        }
 
     }
 
     private fun reload() {
-        val intent = Intent(this, MainActivity::class.java)
+        val intent = Intent(this, HomeActivity::class.java)
         startActivity(intent)
     }
 

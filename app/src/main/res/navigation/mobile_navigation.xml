@@ -3,23 +3,30 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
-
+    app:startDestination="@id/homeFragment">
     <fragment
-        android:id="@+id/navigation_home"
-        android:name="com.mike.instagramclone.ui.home.HomeFragment"
-        android:label="@string/title_home"
+        android:id="@+id/homeFragment"
+        android:name="com.mike.instagramclone.fragments.HomeFragment"
+        android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
-
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.mike.instagramclone.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
-
+        android:id="@+id/profileFragment"
+        android:name="com.mike.instagramclone.fragments.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.mike.instagramclone.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/addFragment"
+        android:name="com.mike.instagramclone.fragments.AddFragment"
+        android:label="fragment_add"
+        tools:layout="@layout/fragment_add" />
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.mike.instagramclone.fragments.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" />
+    <fragment
+        android:id="@+id/reelFragment"
+        android:name="com.mike.instagramclone.fragments.ReelFragment"
+        android:label="fragment_reel"
+        tools:layout="@layout/fragment_reel" />
 </navigation>
