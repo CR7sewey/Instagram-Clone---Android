@@ -3,29 +3,29 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/home">
     <fragment
-        android:id="@+id/homeFragment"
+        android:id="@+id/home"
         android:name="com.mike.instagramclone.fragments.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
     <fragment
-        android:id="@+id/profileFragment"
+        android:id="@+id/profile"
         android:name="com.mike.instagramclone.fragments.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
     <fragment
-        android:id="@+id/addFragment"
+        android:id="@+id/add"
         android:name="com.mike.instagramclone.fragments.AddFragment"
         android:label="fragment_add"
         tools:layout="@layout/fragment_add" />
     <fragment
-        android:id="@+id/searchFragment"
+        android:id="@+id/search"
         android:name="com.mike.instagramclone.fragments.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search" />
     <fragment
-        android:id="@+id/reelFragment"
+        android:id="@+id/reels"
         android:name="com.mike.instagramclone.fragments.ReelFragment"
         android:label="fragment_reel"
         tools:layout="@layout/fragment_reel" />
