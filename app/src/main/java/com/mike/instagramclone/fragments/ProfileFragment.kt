@@ -1,14 +1,29 @@
 package com.mike.instagramclone.fragments
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.auth
+import com.google.firebase.auth.userProfileChangeRequest
+import com.google.firebase.firestore.firestore
+import com.mike.instagramclone.Models.User
 import com.mike.instagramclone.R
+import com.mike.instagramclone.SignUpActivity
 import com.mike.instagramclone.databinding.FragmentProfileBinding
+import com.mike.instagramclone.utils.USER
+import com.mike.instagramclone.utils.USER_PROFILE_FOLDER
+import com.mike.instagramclone.utils.Utils
+import com.squareup.picasso.Picasso
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -25,7 +40,23 @@ class ProfileFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     private lateinit var binding: FragmentProfileBinding
-    private lateinit var user: FirebaseUser
+    private lateinit var user: User
+    private val launcher = registerForActivityResult(ActivityResultContracts.GetContent()) {
+            uri ->
+        uri?.let { it ->
+            Utils().uploadImage(it, USER_PROFILE_FOLDER) {
+                    imageUrl ->
+                if (imageUrl != null) {
+                    user.image = imageUrl
+                    //binding.profileImage.setImageURI(it)
+                   // binding.plus.setImageURI(it)
+                }
+                else {
+                    Snackbar.make(binding.root, "Something went wrong", Snackbar.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +64,56 @@ class ProfileFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-        user = FirebaseAuth.getInstance().currentUser!!
+
+
+
+    }
+
+   /* private fun updateProfile() {
+        // [START update_profile]
+        val user = Firebase.auth.currentUser
+
+        val profileUpdates = userProfileChangeRequest {
+            photoUri = Uri.parse(binding.profileImage.toString())
+        }
+
+        user!!.updateProfile(profileUpdates)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Log.d("TAG", "User profile updated.")
+                }
+            }
+        // [END update_profile]
+    }*/
+
+    override fun onStart() {
+        super.onStart()
+        Firebase.firestore.collection(USER).document(Firebase.auth.currentUser?.uid ?: "").get().addOnSuccessListener { it ->
+            var user = it.toObject(User::class.java)!!
+            binding.username.text = user.username
+            binding.name.text = user.username
+            binding.bio.text = user.username + "    " + user.email
+
+            if (!user.image.isNullOrEmpty()) {
+                var image = user.image as Uri
+                Picasso.get().load(image).into(binding.profileImage)
+            }
+
+            binding.plus.setOnClickListener {
+                launcher.launch("image/*")
+            }
+
+            binding.edit.setOnClickListener {
+                val intent = Intent(activity, SignUpActivity::class.java)
+                intent.apply {
+                    putExtra("MODE", 1)
+                }
+                activity?.startActivity(intent)
+                activity?.finish()
+            }
+
+        }
+
     }
 
     override fun onCreateView(

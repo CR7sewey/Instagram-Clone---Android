@@ -1,7 +1,9 @@
 package com.mike.instagramclone
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.text.Editable
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -16,14 +18,14 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.firestore
 import com.mike.instagramclone.Models.User
 import com.mike.instagramclone.databinding.ActivitySignUpBinding
 import com.mike.instagramclone.utils.USER
 import com.mike.instagramclone.utils.USER_PROFILE_FOLDER
 import com.mike.instagramclone.utils.Utils
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import com.squareup.picasso.Picasso
+
 
 class SignUpActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignUpBinding
@@ -75,7 +77,36 @@ class SignUpActivity : AppCompatActivity() {
         }
 
 
+        if (intent.hasExtra("MODE") && intent.getIntExtra("MODE", -1) == 1) {
+            binding.register.text = "Update Profile"
+            Firebase.firestore.collection(USER).document(Firebase.auth.currentUser?.uid ?: "").get().addOnSuccessListener { it ->
+                user = it.toObject(User::class.java)!!
+                username.editText?.setText(user.username)// = Editable.Factory.getInstance().newEditable(user.username)
+                email.editText?.setText(user.email)// = Editable.Factory.getInstance().newEditable(user.email)
+                password.editText?.setText(user.password) // = Editable.Factory.getInstance().newEditable(user.password)
+
+                if (!user.image.isNullOrEmpty()) {
+                    var image = user.image as Uri
+                    Picasso.get().load(image).into(binding.profileImage)
+                }
+            }
+
+        }
+
+
         register.setOnClickListener {
+            if (intent.hasExtra("MODE") && intent.getIntExtra("MODE", -1) == 1) {
+                //user = User(username.editText?.text.toString(), password.editText?.text.toString(), email.editText?.text.toString())
+                user.username = username.editText?.text.toString()
+                user.email = email.editText?.text.toString()
+                user.password = password.editText?.text.toString()
+                user.image = user.image
+                saveUser()
+
+            }
+
+
+
             if (username.editText?.text.toString().trim().isEmpty()) {
                 Toast.makeText(this, "Please insert your username", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -107,7 +138,7 @@ class SignUpActivity : AppCompatActivity() {
 
     }
 
-    override fun onStart() {
+    /*override fun onStart() {
         super.onStart()
         // Check if user is signed in (non-null) and update UI accordingly.
         val currentUser = auth.currentUser
@@ -115,7 +146,7 @@ class SignUpActivity : AppCompatActivity() {
             reload()
         }
 
-    }
+    }*/
 
     private fun reload() {
         val intent = Intent(this, HomeActivity::class.java)

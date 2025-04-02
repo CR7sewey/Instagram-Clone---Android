@@ -5,11 +5,12 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:layout_marginTop="20dp"
+    android:layout_marginTop="36dp"
     tools:context=".fragments.ProfileFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
+        android:id="@+id/username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -52,7 +53,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/username"
+            android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toEndOf="@id/profile_image"
@@ -69,7 +70,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toEndOf="@id/profile_image"
-            app:layout_constraintTop_toTopOf="@id/username"
+            app:layout_constraintTop_toTopOf="@id/name"
             android:text="12"
             android:layout_marginTop="24dp"
             android:layout_marginLeft="36dp"
@@ -97,7 +98,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toEndOf="@id/postsNumber"
-            app:layout_constraintTop_toTopOf="@id/username"
+            app:layout_constraintTop_toTopOf="@id/name"
             android:text="1212"
             android:layout_marginTop="24dp"
             android:layout_marginLeft="52dp"
@@ -127,7 +128,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toEndOf="@id/followersNumber"
-            app:layout_constraintTop_toTopOf="@id/username"
+            app:layout_constraintTop_toTopOf="@id/name"
             android:text="1212"
             android:layout_marginTop="24dp"
             android:layout_marginLeft="52dp"
