@@ -1,21 +1,13 @@
 package com.mike.instagramclone.adapters
 
 import android.util.Log
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
-import com.mike.instagramclone.Models.User
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
-import androidx.fragment.app.ListFragment
-import androidx.recyclerview.widget.ListAdapter
-import androidx.viewpager2.adapter.FragmentViewHolder
+import androidx.lifecycle.Lifecycle
+import androidx.viewpager2.adapter.FragmentStateAdapter
 
 
-class ViewPagerAdapter(private val fm: FragmentManager) : FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+class ViewPagerAdapter(fm: FragmentManager, lifecycle: Lifecycle) : FragmentStateAdapter(fm, lifecycle) {
 
     val fragmentList: MutableList<Fragment> = mutableListOf<Fragment>()
     val titleList = mutableListOf<String>()
@@ -30,21 +22,26 @@ class ViewPagerAdapter(private val fm: FragmentManager) : FragmentPagerAdapter(f
 
         }
     }*/
-    override fun getItem(position: Int): Fragment {
+    /*fun getItem(position: Int): Fragment {
         return fragmentList.get(position)
-    }
+    }*/
 
-    override fun getCount(): Int {
+    override fun getItemCount(): Int {
         return fragmentList.size
     }
 
-    override fun getPageTitle(position: Int): CharSequence? {
-        return titleList.get(position)
+    fun getPageTitle(position: Int): CharSequence? {
+        return titleList[position]
     }
 
     fun addFragment(fragment: Fragment, title: String) {
         fragmentList.add(fragment)
         titleList.add(title)
+    }
+
+    override fun createFragment(position: Int): Fragment {
+        Log.d("AQUI", fragmentList[position].toString())
+        return fragmentList[position]
     }
 
 }

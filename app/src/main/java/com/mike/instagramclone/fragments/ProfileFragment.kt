@@ -9,16 +9,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.Firebase
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
-import com.google.firebase.auth.userProfileChangeRequest
 import com.google.firebase.firestore.firestore
 import com.mike.instagramclone.Models.User
-import com.mike.instagramclone.R
 import com.mike.instagramclone.SignUpActivity
+import com.mike.instagramclone.adapters.ViewPagerAdapter
 import com.mike.instagramclone.databinding.FragmentProfileBinding
 import com.mike.instagramclone.utils.USER
 import com.mike.instagramclone.utils.USER_PROFILE_FOLDER
@@ -41,6 +41,22 @@ class ProfileFragment : Fragment() {
     private var param2: String? = null
     private lateinit var binding: FragmentProfileBinding
     private lateinit var user: User
+    private lateinit var viewPagerAdapter: ViewPagerAdapter
+
+    private val page2Callback = object: ViewPager2.OnPageChangeCallback() {
+        override fun onPageSelected(position: Int) {
+            super.onPageSelected(position)
+            Log.d("TAG", position.toString())
+
+            binding.tablayout.setOnClickListener {
+                binding.tablayout.getTabAt(position)
+                binding.viewpager.currentItem = position
+            }
+
+        }
+
+    }
+
     private val launcher = registerForActivityResult(ActivityResultContracts.GetContent()) {
             uri ->
         uri?.let { it ->
@@ -112,6 +128,7 @@ class ProfileFragment : Fragment() {
                 activity?.finish()
             }
 
+
         }
 
     }
@@ -123,7 +140,47 @@ class ProfileFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentProfileBinding.inflate(inflater, container, false)
 
+        viewPagerAdapter = ViewPagerAdapter(requireActivity().supportFragmentManager, lifecycle)
+
+        viewPagerAdapter.addFragment(MyPostFragment(), "My Post")
+        viewPagerAdapter.addFragment(MyReelsFragment(), "My Reels")
+
+        binding.viewpager.adapter = viewPagerAdapter
+
+        binding.viewpager.registerOnPageChangeCallback(page2Callback)
+
+
+        binding.tablayout.addTab(binding.tablayout.newTab().setText(viewPagerAdapter.getPageTitle(0)))
+        binding.tablayout.addTab(binding.tablayout.newTab().setText(viewPagerAdapter.getPageTitle(1)))
+
+        TabLayoutMediator(binding.tablayout, binding.viewpager) { tab, position ->
+            tab.text = viewPagerAdapter.getPageTitle(position)}.attach()
+
         return binding.root
+    }
+    // https://www.youtube.com/watch?app=desktop&v=ufZhpgoHLv8
+    // https://www.youtube.com/watch?v=Y946tVSRQmc
+
+    // Not needed
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val position = arguments?.getInt(ARG_PARAM1, 0)
+        val viewPager = binding.viewpager
+        Log.d("POS,", position.toString())
+        position?.let {
+            when(position)
+                {
+                0 -> binding.tablayout.getTabAt(0)
+                1 -> binding.tablayout.getTabAt(1)
+
+            }
+        }
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        binding.viewpager.unregisterOnPageChangeCallback(page2Callback)
     }
 
     companion object {
@@ -137,11 +194,10 @@ class ProfileFragment : Fragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance(param1: Int) =
             ProfileFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+                    putInt(ARG_PARAM1, param1)
                 }
             }
     }
