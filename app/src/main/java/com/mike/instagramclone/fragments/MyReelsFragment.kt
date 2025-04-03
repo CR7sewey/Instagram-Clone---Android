@@ -15,6 +15,7 @@ import com.mike.instagramclone.Models.Reel
 import com.mike.instagramclone.R
 import com.mike.instagramclone.adapters.PostListAdapter
 import com.mike.instagramclone.adapters.ReelListAdapter
+import com.mike.instagramclone.databinding.FragmentMyReelsBinding
 import com.mike.instagramclone.databinding.FragmentPostBinding
 import com.mike.instagramclone.databinding.FragmentReelBinding
 import com.mike.instagramclone.test.PostList
@@ -35,7 +36,7 @@ class MyReelsFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    private lateinit var binding: FragmentReelBinding
+    private lateinit var binding: FragmentMyReelsBinding
     private lateinit var adapter: ReelListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,7 +52,7 @@ class MyReelsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = FragmentReelBinding.inflate(inflater, container, false)
+        binding = FragmentMyReelsBinding.inflate(inflater, container, false)
 
         var rv = binding.rvReels
         adapter = ReelListAdapter(requireContext())
