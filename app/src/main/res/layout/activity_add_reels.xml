@@ -7,14 +7,160 @@
     android:layout_height="match_parent"
     tools:context=".Post.AddReelsActivity">
 
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/materialToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:backgroundTint="@color/transparent"
+        >
+
+        <!--
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="wrap_content"
+            android:layout_height="?attr/actionBarSize"
+            app:navigationIcon="?attr/homeAsUpIndicator" />
+            -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="New Reel"
+            android:textSize="24sp"
+
+            />
+    </com.google.android.material.appbar.MaterialToolbar>
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/videoView1"
+        android:src="@drawable/clapperboard"
+        android:scaleType="fitCenter"
+        app:riv_corner_radius="20dip"
+        app:riv_border_width="0dip"
+        app:riv_border_color="#333333"
+        app:layout_constraintTop_toBottomOf="@id/materialToolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_height="126dp"
+        android:layout_width="300dp"
+        android:layout_marginTop="56dp"
+
+        />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/caption"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:hint="Write a Caption"
+        app:boxStrokeColor="@color/blue"
+        app:layout_constraintTop_toBottomOf="@id/videoView1"
+        app:layout_constraintEnd_toEndOf="@id/videoView1"
+        app:layout_constraintStart_toStartOf="@id/videoView1"
+        >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:minHeight="48dp"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <LinearLayout
+        android:id="@+id/shareToPost"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toBottomOf="@id/caption"
+        >
+
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@drawable/clapperboard"
+            android:layout_marginTop="24dp"
+
+            />
+
+        <TextView
+            android:id="@+id/addPost"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="22dp"
+            android:text="Share To Reel"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="16dp"
+            android:layout_weight="1"
+            />
+    </LinearLayout>
+
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/text3"
+        android:padding="6dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="Your reel may appear in Reels and can be seen on the Reels tab of your profile"
+        android:layout_marginTop="16dp"
+        android:textSize="16sp"
+        android:textColor="@color/grey"
+        app:layout_constraintTop_toBottomOf="@id/shareToPost"
+        app:layout_constraintStart_toStartOf="@id/shareToPost"
+        app:layout_constraintEnd_toEndOf="@id/shareToPost"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/text3"
+        app:layout_constraintEnd_toEndOf="@id/text3"
+        app:layout_constraintStart_toStartOf="@id/text3"
+        android:orientation="horizontal"
+        >
+
+        <Button
+            android:id="@+id/cancel"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:backgroundTint="@color/transparent"
+            android:textColor="@color/grey"
+            app:strokeColor="@color/blue"
+            android:layout_weight="1"
+            android:layout_marginEnd="5dp"
+            android:text="cancel"
+            />
+
+        <Button
+            android:id="@+id/post"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="26dp"
+            android:backgroundTint="@color/blue"
+            android:textColor="@color/white"
+            android:layout_marginEnd="20dp"
+            android:layout_weight="1"
+            android:layout_marginStart="5dp"
+            android:text="post"
+            />
+
+
+
+    </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

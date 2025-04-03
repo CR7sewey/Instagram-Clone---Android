@@ -71,6 +71,11 @@ class AddPostActivity : AppCompatActivity() {
             launcher.launch("image/*")
         }
 
+        binding.cancel.setOnClickListener {
+            startActivity(Intent(this@AddPostActivity, HomeActivity::class.java))
+            finish()
+        }
+
         binding.post.setOnClickListener {
             if (binding.imageView1.getDrawable() == null) {
                 Toast.makeText(this, "Please select an image", Toast.LENGTH_SHORT).show()
