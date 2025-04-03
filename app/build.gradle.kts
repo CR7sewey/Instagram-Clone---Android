@@ -41,6 +41,7 @@ android {
     buildFeatures {
         viewBinding = true
     }
+
 }
 
 dependencies {
@@ -59,6 +60,8 @@ dependencies {
 
     implementation("com.google.android.material:material:1.11.0")
     implementation("com.squareup.picasso:picasso:2.8")
+    implementation("com.makeramen:roundedimageview:2.3.0")
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
