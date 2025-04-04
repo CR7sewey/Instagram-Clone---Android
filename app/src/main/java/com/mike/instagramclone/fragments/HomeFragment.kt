@@ -1,6 +1,7 @@
 package com.mike.instagramclone.fragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.Menu
@@ -8,8 +9,13 @@ import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.mike.instagramclone.R
+import com.mike.instagramclone.adapters.PostListAdapter
+import com.mike.instagramclone.adapters.PostListHomeAdapter
+import com.mike.instagramclone.adapters.ReelListAdapter
 import com.mike.instagramclone.databinding.FragmentHomeBinding
+import com.mike.instagramclone.test.PostList
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,6 +32,7 @@ class HomeFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     private lateinit var binding: FragmentHomeBinding
+    private lateinit var postAdapter: PostListHomeAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +50,23 @@ class HomeFragment : Fragment() {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         setHasOptionsMenu(true)
         (requireActivity() as AppCompatActivity).setSupportActionBar(binding.materialToolbar)
+
+        var rv = binding.rvPosts
+        postAdapter = PostListHomeAdapter(requireContext())
+        rv.adapter = postAdapter
+
+        var fakeList = PostList.postSlides // getData()
+        fakeList = fakeList.map { it ->
+            it.image = R.drawable.image.toString()
+            return@map it
+        }
+
+        Log.d("PICS",fakeList.toString())
+
+
+        //GlobalScope.launch(Dispatchers.Main) {
+        postAdapter.submitList(fakeList)
+        //}
 
         return binding.root
     }
