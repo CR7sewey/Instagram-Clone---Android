@@ -47,6 +47,7 @@ class ReelAdapter(var context: Context, @DrawableRes var drawableRes: Int): List
             binding.video.setVideoPath(reel.image)
 
             binding.video.setOnPreparedListener { it ->
+                binding.progressBar.visibility = ViewGroup.GONE
                 it.start()
             }
         }

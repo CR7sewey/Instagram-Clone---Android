@@ -26,6 +26,8 @@ import com.mike.instagramclone.utils.POST
 import com.mike.instagramclone.utils.POST_FOLDER
 import com.mike.instagramclone.utils.REEL
 import com.mike.instagramclone.utils.REEL_FOLDER
+import com.mike.instagramclone.utils.USER
+import com.mike.instagramclone.utils.USER_PROFILE_FOLDER
 import com.mike.instagramclone.utils.Utils
 
 class AddReelsActivity : AppCompatActivity() {
@@ -92,8 +94,9 @@ class AddReelsActivity : AppCompatActivity() {
             else {
                 reel.caption = binding.caption.editText?.text.toString()
                 reel.uid = Firebase.auth.currentUser?.uid!!
-                Toast.makeText(this, "Post created", Toast.LENGTH_SHORT).show()
+                reel.image = videoURL
                 saveReel()
+                Toast.makeText(this, "Post created", Toast.LENGTH_SHORT).show()
                 finish()
             }
 
@@ -103,6 +106,13 @@ class AddReelsActivity : AppCompatActivity() {
 
     private fun saveReel() {
         db = FirebaseFirestore.getInstance()
+        // user
+        db.collection(USER_PROFILE_FOLDER).document(Firebase.auth.currentUser?.uid!!).get().addOnSuccessListener {
+            if (it != null) {
+                reel.profileLink = it.get("image").toString()
+            }
+
+        }
 
         db.collection(Firebase.auth.currentUser?.uid!!+REEL).document().set(reel)
             .addOnSuccessListener {
