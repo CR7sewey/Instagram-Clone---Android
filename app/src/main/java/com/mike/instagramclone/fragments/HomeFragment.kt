@@ -1,5 +1,7 @@
 package com.mike.instagramclone.fragments
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -9,13 +11,23 @@ import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
+import com.google.firebase.firestore.firestore
+import com.mike.instagramclone.Models.Post
+import com.mike.instagramclone.Models.User
 import com.mike.instagramclone.R
+import com.mike.instagramclone.SignUpActivity
 import com.mike.instagramclone.adapters.PostListAdapter
 import com.mike.instagramclone.adapters.PostListHomeAdapter
 import com.mike.instagramclone.adapters.ReelListAdapter
 import com.mike.instagramclone.databinding.FragmentHomeBinding
 import com.mike.instagramclone.test.PostList
+import com.mike.instagramclone.utils.POST
+import com.mike.instagramclone.utils.USER
+import com.squareup.picasso.Picasso
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -41,6 +53,23 @@ class HomeFragment : Fragment() {
             param2 = it.getString(ARG_PARAM2)
         }
     }
+    override fun onStart() {
+        super.onStart()
+        Firebase.firestore.collection(USER).document(Firebase.auth.currentUser?.uid ?: "").get().addOnSuccessListener { it ->
+            var user = it.toObject(User::class.java)!!
+
+            if (!user.image.isNullOrEmpty()) {
+                var image = user.image as Uri
+                Picasso.get().load(image).into(binding.profileImage)
+            }
+
+
+
+
+        }
+
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,12 +77,17 @@ class HomeFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentHomeBinding.inflate(inflater, container, false)
-        setHasOptionsMenu(true)
-        (requireActivity() as AppCompatActivity).setSupportActionBar(binding.materialToolbar)
+
+
+
 
         var rv = binding.rvPosts
         postAdapter = PostListHomeAdapter(requireContext())
+        rv.layoutManager = LinearLayoutManager(requireContext())
         rv.adapter = postAdapter
+
+        setHasOptionsMenu(true)
+        (requireActivity() as AppCompatActivity).setSupportActionBar(binding.materialToolbar)
 
         var fakeList = PostList.postSlides // getData()
         fakeList = fakeList.map { it ->
@@ -95,5 +129,24 @@ class HomeFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    private fun getData(): ArrayList<Post> {
+        var listPosts = arrayListOf<Post>()
+        listPosts.clear()
+        Firebase.firestore.collection(POST).get().addOnSuccessListener { it ->
+            if (it == null) return@addOnSuccessListener
+            var list = arrayListOf<Post>()
+            for (i in it.documents) {
+                var post = i.toObject(Post::class.java)
+                if (post != null) {
+                    list.add(post)
+                }
+
+            }
+            listPosts.addAll(list)
+            postAdapter.notifyDataSetChanged()
+        }
+        return listPosts
     }
 }

@@ -15,11 +15,13 @@ import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.mike.instagramclone.HomeActivity
 import com.mike.instagramclone.Models.Post
+import com.mike.instagramclone.Models.User
 import com.mike.instagramclone.R
 import com.mike.instagramclone.databinding.ActivityAddPostBinding
 import com.mike.instagramclone.utils.POST
 import com.mike.instagramclone.utils.POST_FOLDER
 import com.mike.instagramclone.utils.Utils
+import java.util.Date
 
 class AddPostActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddPostBinding
@@ -85,7 +87,6 @@ class AddPostActivity : AppCompatActivity() {
             }
             else {
                 post.caption = binding.caption.editText?.text.toString()
-                post.uid = Firebase.auth.currentUser?.uid!!
                 Toast.makeText(this, "Post created", Toast.LENGTH_SHORT).show()
                 savePost()
                 finish()
@@ -97,11 +98,25 @@ class AddPostActivity : AppCompatActivity() {
 
     private fun savePost() {
         db = FirebaseFirestore.getInstance()
+
+        db.collection(Firebase.auth.currentUser?.uid!!).document().get().addOnSuccessListener {
+            if (it != null) {
+                var user = it.toObject(User::class.java)
+                post.time = System.currentTimeMillis().toString()
+                post.caption = binding.caption.editText?.text.toString()
+                post.uid = Firebase.auth.currentUser?.uid!!
+                post.image = binding.imageView1.toString()
+            }
+        }
+
+
         db.collection(POST).document().set(post)
             .addOnSuccessListener { documentReference ->
                 db.collection(Firebase.auth.currentUser?.uid!!).document().set(post)
-                    .addOnSuccessListener {
-                    Toast.makeText(
+                    .addOnSuccessListener { it ->
+                        post.uid = Firebase.auth.currentUser?.uid!!
+
+                        Toast.makeText(
                         this@AddPostActivity,
                         "Post saved: ${post.image.toString()}",
                         Toast.LENGTH_SHORT
