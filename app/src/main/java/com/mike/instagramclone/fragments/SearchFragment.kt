@@ -1,11 +1,19 @@
 package com.mike.instagramclone.fragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.mike.instagramclone.R
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
+import com.google.firebase.firestore.firestore
+import com.mike.instagramclone.Models.User
+import com.mike.instagramclone.adapters.ProfilesListAdapter
+import com.mike.instagramclone.databinding.FragmentSearchBinding
+import com.mike.instagramclone.utils.USER
+import kotlinx.coroutines.flow.MutableStateFlow
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -21,6 +29,9 @@ class SearchFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    private lateinit var binding: FragmentSearchBinding
+    private lateinit var adapter: ProfilesListAdapter
+    private var text: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +46,43 @@ class SearchFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search, container, false)
+        binding = FragmentSearchBinding.inflate(inflater, container, false)
+
+        adapter = ProfilesListAdapter(requireContext())
+        binding.rvPosts.adapter = adapter
+
+
+
+
+        /*Firebase.firestore.collection(USER).get().addOnSuccessListener { it ->
+            if (it == null) return@addOnSuccessListener
+            var list = arrayListOf<User>()
+
+            for (i in it.documents) {
+                var user = i.toObject(User::class.java)
+                if (Firebase.auth.currentUser!!.uid != i.id && user != null
+                    && user.username!!.contains(text)
+                ) {
+                    list.add(user)
+                }
+            }
+            adapter.submitList(list)
+        }*/
+        adapter.submitList(getData())
+        binding.searchView.setOnClickListener { it ->
+            Log.d("TAG 11", it.toString())
+            text = binding.searchView.text.toString()
+            if (it.toString().trim().isEmpty()) {
+                adapter.submitList(getData())
+                return@setOnClickListener
+            }
+            text = it.toString()
+            adapter.submitList(getData(text)) // getData()
+        }
+
+
+
+        return binding.root
     }
 
     companion object {
@@ -56,5 +103,32 @@ class SearchFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    private fun getData(text: String? = null): ArrayList<User> {
+        var listPosts = arrayListOf<User>()
+        //.whereEqualTo("username", texto)
+        Firebase.firestore.collection(USER).get().addOnSuccessListener { it ->
+            if (it == null) return@addOnSuccessListener
+            var list = arrayListOf<User>()
+            for (i in it.documents) {
+                var user = i.toObject(User::class.java)
+                if (Firebase.auth.currentUser!!.uid != i.id && user != null) {
+                    if (text != null && text.toString().trim().isNotEmpty() == true) {
+                        Log.d("TAG 12", text.toString())
+
+                        if (user.username!!.contains(text)) {
+                            list.add(user)
+                        }
+                    } else {
+                        Log.d("TAG 13", text.toString())
+                        list.add(user)
+                    }
+                }
+            }
+            listPosts.addAll(list)
+            adapter.notifyDataSetChanged()
+        }
+        return listPosts
     }
 }
