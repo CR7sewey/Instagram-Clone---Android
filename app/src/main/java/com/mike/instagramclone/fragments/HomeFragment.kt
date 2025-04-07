@@ -23,6 +23,7 @@ import com.mike.instagramclone.SignUpActivity
 import com.mike.instagramclone.adapters.PostListAdapter
 import com.mike.instagramclone.adapters.PostListHomeAdapter
 import com.mike.instagramclone.adapters.ReelListAdapter
+import com.mike.instagramclone.adapters.StoriesListAdapter
 import com.mike.instagramclone.databinding.FragmentHomeBinding
 import com.mike.instagramclone.test.PostList
 import com.mike.instagramclone.utils.POST
@@ -45,6 +46,7 @@ class HomeFragment : Fragment() {
     private var param2: String? = null
     private lateinit var binding: FragmentHomeBinding
     private lateinit var postAdapter: PostListHomeAdapter
+    private lateinit var storiesAdapter: StoriesListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -102,6 +104,14 @@ class HomeFragment : Fragment() {
         postAdapter.submitList(fakeList)
         //}
 
+        var rvStories = binding.rvStories
+        storiesAdapter = StoriesListAdapter(requireContext())
+        rvStories.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        rvStories.adapter = storiesAdapter
+        storiesAdapter.submitList(getDataStories())
+
+
         return binding.root
     }
 
@@ -146,6 +156,30 @@ class HomeFragment : Fragment() {
             }
             listPosts.addAll(list)
             postAdapter.notifyDataSetChanged()
+        }
+        return listPosts
+    }
+
+    private fun getDataStories(): ArrayList<User> {
+        var listPosts = arrayListOf<User>()
+        //.whereEqualTo("username", texto)
+
+
+
+        Firebase.firestore.collection(USER).get().addOnSuccessListener { it ->
+            if (it == null) return@addOnSuccessListener
+            var list = arrayListOf<User>()
+            var following: List<User> = emptyList<User>()
+            for (i in it.documents) {
+                var user = i.toObject(User::class.java)
+                if (Firebase.auth.currentUser!!.uid == i.id) {
+
+                    following = user?.following!!
+                    }
+                }
+
+            listPosts.addAll(following)
+            storiesAdapter.notifyDataSetChanged()
         }
         return listPosts
     }
